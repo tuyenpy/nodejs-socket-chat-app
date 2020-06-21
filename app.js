@@ -47,7 +47,6 @@ function start(PORT) {
   });
 }
 
-const Room = require('./model/room.model');
 //socket io
 io.on('connect', async (socket) => {
   console.log(`User is connected ${socket.id}`, '\n', new Date())
@@ -55,28 +54,11 @@ io.on('connect', async (socket) => {
   socket.on('join', async (data) => {
     room = data.room;
     socket.join(room);
-    let messages = (await Room.findOne({name: room})).messages;
-    io.to(room).emit('history-message', messages);
+    io.to(room).emit('room-accept', room);
   })
-  socket.on('send-message', async (data) => {
-    Room.find({name: room})
-      .then(res => {
-        let newRoom = res[0];
-        newRoom.messages.push(data);
-        Room.findOneAndUpdate({
-          name: room
-        }, {
-          messages: newRoom.messages
-        }, {
-          new: true
-        })
-        .then()
-        .catch()
-      })
-      .catch(err => console.log(err))
-    
-    //send event
-    io.to(room).emit('new-message', data);
+  socket.on('send-message', () => {
+    //new-message event
+    io.to(room).emit('new-message');
   })
 })
 
