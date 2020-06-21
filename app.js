@@ -44,7 +44,7 @@ io.on('connect', (socket) => {
     io.to(room).emit('new-message');
   })
   socket.on('add-channel', () => {
-    io.to(room).emit('new-channel');
+    io.emit('new-channel');
   })
 })
 
