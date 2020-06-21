@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -29,24 +28,7 @@ app.get('/', (req, res) => {
 app.use('/api/user', require('./api/route/user.route'));
 app.use('/api/room', require('./api/route/room.route'));
 
-//DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
-mongoose.set('useFindAndModify', false);
-
-//connect to Cluster MongoDB Atlas
-mongoose.connect(URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(_ => console.log('Database connected!'))
-  .then(_ => start(PORT))
-  .catch(({ message }) => console.log(message));
-
-function start(PORT) {
-  server.listen(PORT, () => {
-    console.log(`Server is listening at ${PORT}`, '\n', new Date());
-  });
-}
-
+const io = require('socket.io')(server);
 //socket io
 io.on('connect', (socket) => {
   console.log(`User is connected ${socket.id}`, '\n', new Date());
@@ -64,3 +46,20 @@ io.on('connect', (socket) => {
 })
 
 
+//DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated. See: https://mongoosejs.com/docs/deprecations.html#findandmodify
+mongoose.set('useFindAndModify', false);
+
+//connect to Cluster MongoDB Atlas
+mongoose.connect(URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(_ => console.log('Database connected!'))
+  .then(_ => start(PORT))
+  .catch(({ message }) => console.log(message));
+
+function start(PORT) {
+  server.listen(PORT, () => {
+    console.log(`Server is listening at ${PORT}`, '\n', new Date());
+  });
+}
