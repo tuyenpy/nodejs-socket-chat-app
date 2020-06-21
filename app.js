@@ -48,11 +48,12 @@ function start(PORT) {
 }
 
 //socket io
-io.on('connect', async (socket) => {
-  console.log(`User is connected ${socket.id}`, '\n', new Date())
+io.on('connect', (socket) => {
+  console.log(`User is connected ${socket.id}`, '\n', new Date());
   let room;
-  socket.on('join', async (data) => {
-    room = data.room;
+  socket.on('join', (data) => {
+    room = data;
+    console.log(`User is joined ${room} room`);
     socket.join(room);
     io.to(room).emit('room-accept', room);
   })

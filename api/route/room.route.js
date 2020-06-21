@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const controller = require('../controller/room.controller');
-const { route } = require('./user.route');
 
 //get rooms
 router.get('/', controller.index);

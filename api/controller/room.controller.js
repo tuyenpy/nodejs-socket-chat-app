@@ -3,7 +3,7 @@ const Room = require('../../model/room.model');
 //get rooms
 module.exports.index = async (req, res) => {
   let rooms = await Room.find();
-  res.json({rooms});
+  res.json(rooms);
 }
 
 // create room
@@ -15,9 +15,9 @@ module.exports.create = async (req, res) => {
 
 //get message
 module.exports.getMessage = async (req, res) => {
-  let room = req.query.room;
-  let messages = (await Room.findOne({name: room})).messages;
-  res.json(messages);
+  let name = req.query.name;
+  let room = await Room.findOne({name: name});
+  res.json(room);
 }
 
 // send-message
