@@ -43,6 +43,9 @@ io.on('connect', (socket) => {
     //new-message event
     io.to(room).emit('new-message');
   })
+  socket.on('add-channel', () => {
+    io.to(room).emit('new-channel');
+  })
 })
 
 
